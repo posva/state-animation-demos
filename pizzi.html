@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>It sounds to me!</title>
+</head>
+
+<body>
+
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://unpkg.com/pizzicato"></script>
+  <script src="https://unpkg.com/vue-tweezing"></script>
+  <script src="https://unpkg.com/vue-motion"></script>
+  <script src="https://unpkg.com/tweezer.js"></script>
+
+  <div id="app">
+    <Tweezing :to="to" duration="1000">
+      <div slot-scope="{ frequency, volume }">
+        <h5>Current values</h5>
+        <pre>
+          Frequency: {{ frequency }}
+          Volume: {{ volume }}
+        </pre>
+
+        <pizzi-sound
+          source="wave"
+          :frequency="frequency"
+          :volume="volume"
+          type="sine"
+        ></pizzi-sound>
+      </div>
+    </Tweezing>
+
+    <h5>Target values</h5>
+    <pre>
+      Frequency: {{ frequency }} (step: {{ frequencyStep }})
+      Volume: {{ volume }}
+    </pre>
+
+    <input type="range" min="0" max="1" step="0.1" v-model.number="volume" />
+
+    <input type="range" min="10" max="19000" :step="frequencyStep" v-model.number="frequency" />
+  </div>
+
+  <script>
+    Vue.component('PizziSound', {
+      props: {
+        source: String,
+        frequency: Number,
+        type: String,
+        volume: Number
+      },
+
+      mounted () {
+        this.createSound()
+      },
+
+      methods: {
+        createSound () {
+          this.sound && this.sound.stop()
+          this.sound = new Pizzicato.Sound({
+            source: this.source,
+            options: {
+              type: this.type,
+              volume: this.volume,
+              frequency: this.frequency
+            }
+          })
+          this.sound.play()
+        },
+      },
+
+      watch: {
+        frequency (f) {
+          this.sound.frequency = f
+        },
+
+        volume (v) {
+          this.sound.volume = v
+          if (v < 0.0001) this.sound.pause()
+          else this.sound.play()
+        }
+
+      },
+
+      destroyed () {
+        this.sound.stop()
+        this.sound = null
+      },
+
+      render: h => h()
+    })
+
+    Vue.use(VueTweezing.Tweezing, {
+      tweezer: VueTweezing.tweezerHelper(Tweezer),
+    })
+
+    window.vm = new Vue({
+      el: '#app',
+
+      data () {
+        return {
+          frequency: 800,
+          volume: 0.1,
+        }
+      },
+
+      computed: {
+        frequencyStep () {
+          return 10
+          // return Math.log10(this.frequency)
+        },
+
+        to () {
+          return {
+            frequency: this.frequency,
+            volume: this.volume,
+          }
+        }
+      },
+
+    })
+  </script>
+
+</body>
+
+</html>
