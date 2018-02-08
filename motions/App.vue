@@ -1,19 +1,23 @@
 <template>
   <div id="app">
-    <div class="graph">
-    <svg :width="svgWidth" :height="svgHeight" preserveAspectRatio="none" :viewBox="viewBox">
-      <path :d="pathD"></path>
-    </svg>
-    </div>
-
     <Motion
       ref="motion"
       v-if="!resetting"
       :value="target"
+      tag="div"
       @motion-end="isTracking = false"
       :spring="spring"
     >
-      <pre slot-scope="{ value }">{{ value }} {{ addPoint(value) }}</pre>
+      <template slot-scope="{ value }">
+        <div class="graph">
+          <svg :width="svgWidth" :height="svgHeight" preserveAspectRatio="none" :viewBox="viewBox">
+            <line x1="0" :x2="chartWidth" :y1="svgHeight - maxValue" :y2="svgHeight - maxValue"></line>
+            <path :d="pathD"></path>
+          </svg>
+          <div class="marker" :style="{ transform: `translateY(${-value * aspectRatio}px)`}"></div>
+        </div>
+        <pre >{{ value }} {{ addPoint(value) }}</pre>
+      </template>
     </Motion>
 
     <label>
@@ -51,15 +55,18 @@ export default {
         damping: 26,
         precision: 0.01,
       },
+
       target: 0,
       resetting: false,
       maxValue: 100,
       isTracking: false,
-      points: [],
       pathD: '',
 
+      // last time we called addPoint
       lastTime: 0,
+      // last time we added a point into the path
       lastRendered: 0,
+      maxRegisteredValue: 0,
     }
   },
 
@@ -72,20 +79,24 @@ export default {
       return 140
     },
 
+    aspectRatio () {
+      return this.svgHeight / (this.svgHeight - this.svgTop)
+    },
+
     presets () {
       return presets
     },
 
-    chartWidth () {
-      return Math.max(300, this.lastRendered - this.initialTime)
+    svgTop () {
+      return Math.min(- this.maxRegisteredValue + this.svgHeight, 0) - 10
     },
 
-    chartHeight () {
-      return 220
+    chartWidth () {
+      return Math.max(this.svgWidth, this.lastRendered - this.initialTime)
     },
 
     viewBox () {
-      return `-1 -30 ${this.chartWidth} ${this.chartHeight}`
+      return `0 ${this.svgTop} ${this.chartWidth} ${this.svgHeight - this.svgTop}`
     }
   },
 
@@ -99,17 +110,20 @@ export default {
     async start () {
       await this.reset()
       if (!this.isTracking) {
-        this.pathD = `M0,${this.maxValue + 80} L0,${this.maxValue + 80} `
+        this.pathD = `M0,${this.svgHeight} l0,0 `
         this.isTracking = true
+        this.lastY = 0
+        this.maxRegisteredValue = 0
         this.lastTime = performance.now()
         this.initialTime = this.lastTime
+        this.lastRendered = this.lastTime
       }
       this.target = this.maxValue
     },
 
     delayedStart: debounce(function () {
       this.start()
-    }, 300),
+    }, 100),
 
     setSpring (spring) {
       this.spring = {...spring}
@@ -130,17 +144,17 @@ export default {
       if (!this.isTracking) return
       const now = performance.now()
       const elapsed = now - this.lastTime
+      // do not render too much
       if (elapsed <= 15) return
-      y = this.maxValue - y + 80
+      // make sure we compute all the time
+      const totalElapsed = now - this.lastRendered
+      /* y = this.maxValue - y + 80*/
       if (Math.abs(y - this.lastY) > 0.1) {
         this.lastRendered = now
-        this.pathD += `${now - this.initialTime},${y} `
+        this.pathD += `${totalElapsed},${-(this.lastY ? y - this.lastY : y)} `
+        if (y > this.maxRegisteredValue) this.maxRegisteredValue = y
       }
       this.lastY = y
-      // this.points.push({
-      //   x: now - this.lastTime,
-      //   y,
-      // })
       this.lastTime = now
     }
   },
@@ -153,6 +167,10 @@ export default {
   border-left: #bbb 2px solid;
   border-bottom: darkgrey 2px solid;
   position: relative;
+}
+
+.graph svg {
+  margin-bottom: -4px;
 }
 
 .graph::after {
@@ -177,10 +195,46 @@ export default {
   color: #bbb;
 }
 
+.graph line {
+  stroke: crimson;
+}
+
 .graph path {
   fill: transparent;
   stroke: black;
   stroke-width: 2px;
+}
+
+.graph .marker {
+  position: absolute;
+  left: 100%;
+}
+
+:root {
+  --marker-color: #bf0003;
+  --marker-size: 7px;
+}
+
+.graph .marker::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: calc(-1 * var(--marker-size));
+  width: 0;
+  height: 0;
+  border-top: var(--marker-size) solid transparent;
+  border-bottom: var(--marker-size) solid transparent;
+  border-right: var(--marker-size) solid var(--marker-color);
+}
+
+.graph .marker::after {
+  content: '';
+  position: absolute;
+  left: var(--marker-size);
+  bottom: calc(-1 * var(--marker-size));
+  width: calc(var(--marker-size) * 2.4);
+  height: calc(var(--marker-size) * 2);
+  background: var(--marker-color);
 }
 
 </style>

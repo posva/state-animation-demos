@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Motion from 'vue-motion'
+import 'modern-normalize/modern-normalize.css'
 import App from './App'
 
 Vue.use(Motion)

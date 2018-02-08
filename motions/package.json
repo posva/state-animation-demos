@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.5",
+    "modern-normalize": "^0.2.0",
     "vue-motion": "^0.2.0"
   }
 }
