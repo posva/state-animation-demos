@@ -18,17 +18,17 @@
 
     <label>
       Stiffness
-      <input v-model.number="spring.stiffness" step="10" type="number"/>
+      <input v-model.number="spring.stiffness" @input="delayedStart" step="10" type="number"/>
     </label>
     <br/>
     <label>
       Damping
-      <input v-model.number="spring.damping" step="1" type="number"/>
+      <input v-model.number="spring.damping" step="1" @input="delayedStart" type="number"/>
     </label>
     <br/>
     <label>
       Precision
-      <input v-model.number="spring.precision" step="0.01" type="number"/>
+      <input v-model.number="spring.precision" step="0.01" @input="delayedStart" type="number"/>
     </label>
     <br/>
     <button v-for="(preset, name) in presets" @click="setSpring(preset)">{{ name }}</button>
@@ -41,6 +41,7 @@
 
 <script>
 import presets from 'vue-motion/src/presets'
+import debounce from 'lodash/debounce'
 
 export default {
   data() {
@@ -96,7 +97,7 @@ export default {
 
   methods: {
     async start () {
-      if (!this.isTracking) await this.reset()
+      await this.reset()
       if (!this.isTracking) {
         this.pathD = `M0,${this.maxValue + 80} L0,${this.maxValue + 80} `
         this.isTracking = true
@@ -106,9 +107,14 @@ export default {
       this.target = this.maxValue
     },
 
+    delayedStart: debounce(function () {
+      this.start()
+    }, 300),
+
     setSpring (spring) {
-      this.spring = spring
+      this.spring = {...spring}
       this.spring.precision = this.spring.precision || 0.01
+      this.delayedStart()
     },
 
     async reset () {
