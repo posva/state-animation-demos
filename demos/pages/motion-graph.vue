@@ -179,12 +179,6 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
-body {
-  background-color: #111111;
-  font-family: 'Lato', sans-serif;
-  color: white;
-}
-
 .graph {
   display: inline-block;
   position: relative;

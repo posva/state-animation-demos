@@ -13,6 +13,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "animate.css": "^3.6.1",
     "lodash": "^4.17.5",
     "modern-normalize": "^0.3.0",
     "nuxt": "^1.0.0",

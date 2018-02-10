@@ -37,5 +37,5 @@ module.exports = {
 
   plugins: ['~/plugins/motion'],
 
-  css: ['modern-normalize/modern-normalize.css'],
+  css: ['modern-normalize/modern-normalize.css', 'animate.css/animate.css'],
 }
