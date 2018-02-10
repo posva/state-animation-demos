@@ -55,7 +55,7 @@ import presets from 'vue-motion/src/presets'
 import debounce from 'lodash/debounce'
 
 export default {
-  data() {
+  data () {
     return {
       spring: {
         stiffness: 170,
@@ -99,7 +99,7 @@ export default {
     },
 
     svgTop () {
-      return Math.min(- this.maxRegisteredValue + this.svgHeight, 0) - 10
+      return Math.min(-this.maxRegisteredValue + this.svgHeight, 0) - 10
     },
 
     chartWidth () {
@@ -108,7 +108,7 @@ export default {
 
     viewBox () {
       return `0 ${this.svgTop} ${this.chartWidth} ${this.svgHeight - this.svgTop}`
-    }
+    },
   },
 
   created () {
@@ -163,7 +163,7 @@ export default {
       if (elapsed <= 15) return
       // make sure we compute all the time
       const totalElapsed = now - this.lastRendered
-      /* y = this.maxValue - y + 80*/
+      /* y = this.maxValue - y + 80 */
       if (Math.abs(y - this.lastY) > 0.1) {
         this.lastRendered = now
         this.pathD += `${totalElapsed},${-(this.lastY ? y - this.lastY : y)} `
@@ -171,7 +171,7 @@ export default {
       }
       this.lastY = y
       this.lastTime = now
-    }
+    },
   },
 }
 </script>
