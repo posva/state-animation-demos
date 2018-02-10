@@ -10,16 +10,23 @@
     >
       <template slot-scope="{ value }">
         <div class="graph">
-          <svg :width="svgWidth" :height="svgHeight" preserveAspectRatio="none" :viewBox="viewBox">
+          <svg :style="{ '--stroke-width': 2 / aspectRatio + 'px' }" :width="svgWidth" :height="svgHeight" preserveAspectRatio="none" :viewBox="viewBox">
             <line x1="0" :x2="chartWidth" :y1="svgHeight - maxValue" :y2="svgHeight - maxValue"></line>
             <path :d="pathD"></path>
           </svg>
           <div class="marker" :style="{ transform: `translateY(${-value * aspectRatio}px)`}"></div>
         </div>
-        <pre >{{ value }} {{ addPoint(value) }}</pre>
+        <p>Current value: {{ value }} {{ addPoint(value) }}</p>
+        <p>Last rendered: {{ Math.round(lastRendered - initialTime) }}ms</p>
+        <p>Finished at {{ Math.round(lastTime - initialTime) }}ms</p>
       </template>
     </Motion>
 
+    <label>
+      Target value
+      <input v-model.number="maxValue" @input="delayedStart" step="10" type="number"/>
+    </label>
+    <br/>
     <label>
       Stiffness
       <input v-model.number="spring.stiffness" @input="delayedStart" step="10" type="number"/>
@@ -83,6 +90,10 @@ export default {
       return this.svgHeight / (this.svgHeight - this.svgTop)
     },
 
+    maxValueProportion () {
+      return this.maxValue / 100
+    },
+
     presets () {
       return presets
     },
@@ -104,6 +115,10 @@ export default {
     this.lastTime = 100
     this.initialTime = 0
     this.lastRendered = 100
+
+    setTimeout(() => {
+      this.setSpring(this.presets.wobbly)
+    }, 2000)
   },
 
   methods: {
@@ -162,15 +177,25 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+body {
+  background-color: #111111;
+  font-family: 'Lato', sans-serif;
+  color: white;
+}
+
 .graph {
   display: inline-block;
-  border-left: #bbb 2px solid;
-  border-bottom: darkgrey 2px solid;
   position: relative;
+  padding-left: 1rem;
+  padding-top: 1rem;
 }
 
 .graph svg {
   margin-bottom: -4px;
+  border-left: #bbb 2px solid;
+  border-bottom: darkgrey 2px solid;
 }
 
 .graph::after {
@@ -186,7 +211,7 @@ export default {
 
 .graph::before {
   position: absolute;
-  top: 0;
+  top: 1rem;
   left: 2px;
   content: 'x';
   text-align: left;
@@ -197,12 +222,13 @@ export default {
 
 .graph line {
   stroke: crimson;
+  stroke-width: var(--stroke-width);
 }
 
 .graph path {
   fill: transparent;
-  stroke: black;
-  stroke-width: 2px;
+  stroke: white;
+  stroke-width: var(--stroke-width);
 }
 
 .graph .marker {
@@ -213,6 +239,7 @@ export default {
 :root {
   --marker-color: #bf0003;
   --marker-size: 7px;
+  --stroke-width: 2px;
 }
 
 .graph .marker::before {
