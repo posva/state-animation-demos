@@ -19,6 +19,7 @@
     "lodash": "^4.17.5",
     "modern-normalize": "^0.3.0",
     "nuxt": "^1.0.0",
+    "p5": "^0.6.0",
     "vue-motion": "^0.2.0",
     "vue-tweezing": "^0.1.2"
   },
