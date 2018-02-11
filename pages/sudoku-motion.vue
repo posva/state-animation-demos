@@ -58,7 +58,7 @@ export default {
           y: y * size + 1 + Math.floor((y - 1) / 3),
         }
         return positions
-      }, {})
+      }, Array(this.cells.length))
     },
   },
 }
