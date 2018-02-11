@@ -15,78 +15,276 @@
   <script src="https://unpkg.com/vue-tweezing"></script>
   <script src="https://unpkg.com/vue-motion"></script>
   <script src="https://unpkg.com/tweezer.js"></script>
+  <script src="https://unpkg.com/@tweenjs/tween.js"></script>
 
   <div id="app">
-    <Tweezing :to="to" duration="1000">
+    <Tweezing :to="sound.to" :duration="sound.duration" @end="currentSound = (currentSound + 1) % soundCount" :easing="easing">
       <div slot-scope="{ frequency, volume }">
+        <pre>{{ currentSound }}: {{ sound }}</pre>
         <h5>Current values</h5>
         <pre>
           Frequency: {{ frequency }}
           Volume: {{ volume }}
         </pre>
 
-        <pizzi-sound
-          source="wave"
-          :frequency="frequency"
-          :volume="volume"
-          type="sine"
-        ></pizzi-sound>
+        <pizzi-sound :frequency="frequency" :volume="volume" :type="type" :source="source" :path="soundPath"></pizzi-sound>
       </div>
     </Tweezing>
 
     <h5>Target values</h5>
     <pre>
-      Frequency: {{ frequency }} (step: {{ frequencyStep }})
+      FrequencyFactor: {{ frequencyFactor }}
+      Speed: {{ timeMultiplicator }}
       Volume: {{ volume }}
     </pre>
 
-    <input type="range" min="0" max="1" step="0.1" v-model.number="volume" />
+    <div v-if="source === 'wave'">
+      <label>
+        <input name="waveType" type="radio" v-model="type" value="sine" /> Sine
+      </label>
 
-    <input type="range" min="10" max="19000" :step="frequencyStep" v-model.number="frequency" />
+      <label>
+        <input name="waveType" type="radio" v-model="type" value="square" /> Square
+      </label>
+
+      <label>
+        <input name="waveType" type="radio" v-model="type" value="triangle" /> Triangle
+      </label>
+
+      <label>
+        <input name="waveType" type="radio" v-model="type" value="sawtooth" /> Sawtooth
+      </label>
+    </div>
+
+    <div>
+      <label>
+        <input name="source" type="radio" v-model="source" value="wave" /> Wave
+      </label>
+
+      <label>
+        <input name="source" type="radio" v-model="source" value="file" /> File
+      </label>
+    </div>
+    🔈
+    <input type="range" min="0" max="1" step="0.1" v-model.number="volume" />
+    <br> 👴
+    <input type="range" min="0.5" max="4" step="0.1" v-model.number="frequencyFactor" />👦
+    <br> ⏳
+
+    <input type="range" min="0.1" max="5" step="0.1" v-model.number="timeMultiplicator" />
   </div>
 
   <script>
+    const notes = {
+      c: 261,
+      d: 294,
+      e: 329,
+      f: 349,
+      g: 391,
+      gS: 415,
+      a: 440,
+      aS: 455,
+      b: 466,
+      cH: 523,
+      cSH: 554,
+      dH: 587,
+      dSH: 622,
+      eH: 659,
+      fH: 698,
+      fSH: 740,
+      gH: 784,
+      gSH: 830,
+      aH: 880,
+    }
+
+    const make = {
+      beep(frequency, duration) {
+        return [
+          {
+            frequency: frequency - 1,
+            duration: duration / 2,
+          },
+          {
+            frequency,
+            duration: duration / 2,
+          },
+          {
+            volume: 0,
+            duration: 75
+          },
+          {
+            volume: 0.01,
+            duration: 75
+          },
+        ]
+      },
+      pause(duration) {
+        return [
+          {
+            volume: 0,
+            duration: duration / 2
+          },
+          {
+            volume: 0.01,
+            duration: duration / 2
+          },
+        ]
+      },
+
+      firstSection() {
+        return [
+          ...make.beep(notes.a, 500),
+          ...make.beep(notes.a, 500),
+          ...make.beep(notes.a, 500),
+          ...make.beep(notes.f, 350),
+          ...make.beep(notes.cH, 150),
+          ...make.beep(notes.a, 500),
+          ...make.beep(notes.f, 350),
+          ...make.beep(notes.cH, 150),
+          ...make.beep(notes.a, 650),
+
+          ...make.pause(500),
+
+          ...make.beep(notes.eH, 500),
+          ...make.beep(notes.eH, 500),
+          ...make.beep(notes.eH, 500),
+          ...make.beep(notes.fH, 350),
+          ...make.beep(notes.cH, 150),
+          ...make.beep(notes.gS, 500),
+          ...make.beep(notes.f, 350),
+          ...make.beep(notes.cH, 150),
+          ...make.beep(notes.a, 650),
+
+          ...make.pause(500),
+        ]
+      },
+
+      secondSection() {
+        return [
+          ...make.beep(notes.aH, 500),
+          ...make.beep(notes.a, 300),
+          ...make.beep(notes.a, 150),
+          ...make.beep(notes.aH, 500),
+          ...make.beep(notes.gSH, 325),
+          ...make.beep(notes.gH, 175),
+          ...make.beep(notes.fSH, 125),
+          ...make.beep(notes.fH, 125),
+          ...make.beep(notes.fSH, 250),
+          ...make.pause(325),
+          ...make.beep(notes.aS, 250),
+          ...make.beep(notes.dSH, 500),
+          ...make.beep(notes.dH, 325),
+          ...make.beep(notes.cSH, 175),
+          ...make.beep(notes.cH, 125),
+          ...make.beep(notes.b, 125),
+          ...make.beep(notes.cH, 250),
+          ...make.pause(350),
+        ]
+      }
+    }
+
+    const pauseStart = {
+      volume: 0,
+      duration: 50
+    }
+    const pauseEnd = {
+      volume: 0.01,
+      duration: 200
+    }
+    const sounds = [
+      ...make.firstSection(),
+      ...make.secondSection(),
+
+      ...make.beep(notes.f, 250),
+      ...make.beep(notes.gS, 500),
+      ...make.beep(notes.f, 350),
+      ...make.beep(notes.a, 125),
+      ...make.beep(notes.cH, 500),
+      ...make.beep(notes.a, 375),
+      ...make.beep(notes.cH, 125),
+      ...make.beep(notes.eH, 650),
+
+      ...make.pause(500),
+
+      //...Repeat second section
+      ...make.secondSection(),
+
+      //...Variant 2
+      ...make.beep(notes.f, 250),
+      ...make.beep(notes.gS, 500),
+      ...make.beep(notes.f, 375),
+      ...make.beep(notes.cH, 125),
+      ...make.beep(notes.a, 500),
+      ...make.beep(notes.f, 375),
+      ...make.beep(notes.cH, 125),
+      ...make.beep(notes.a, 650),
+
+      ...make.pause(650),
+    ]
+
     Vue.component('PizziSound', {
       props: {
         source: String,
         frequency: Number,
         type: String,
-        volume: Number
+        volume: Number,
+        path: String,
       },
 
-      mounted () {
+      mounted() {
         this.createSound()
       },
 
       methods: {
-        createSound () {
+        async createSound() {
           this.sound && this.sound.stop()
-          this.sound = new Pizzicato.Sound({
-            source: this.source,
-            options: {
-              type: this.type,
-              volume: this.volume,
-              frequency: this.frequency
-            }
+          this.sound = await new Promise(resolve => {
+            const sound = new Pizzicato.Sound({
+              source: this.source,
+              options: {
+                loop: true,
+                path: this.path,
+                type: this.type,
+                volume: this.volume,
+                frequency: this.frequency
+              }
+            }, () => {
+              setTimeout(() => { resolve(sound) }, 0)
+            })
           })
+          const flanger = new Pizzicato.Effects.Flanger({
+            time: 0.45,
+            speed: 0.2,
+            depth: 0.1,
+            feedback: 0.1,
+            mix: 0.5
+          });
+
+          /* this.sound.addEffect(flanger);*/
           this.sound.play()
         },
       },
 
       watch: {
-        frequency (f) {
+        frequency(f) {
+          if (!this.sound) return
           this.sound.frequency = f
         },
 
-        volume (v) {
+        volume(v) {
+          if (!this.sound) return
           this.sound.volume = v
           if (v < 0.0001) this.sound.pause()
           else this.sound.play()
-        }
+        },
+
+        source: 'createSound',
+        type: 'createSound',
+        path: 'createSound',
 
       },
 
-      destroyed () {
+      destroyed() {
         this.sound.stop()
         this.sound = null
       },
@@ -95,26 +293,75 @@
     })
 
     Vue.use(VueTweezing.Tweezing, {
-      tweezer: VueTweezing.tweezerHelper(Tweezer),
+      // tweezer: VueTweezing.tweezerHelper(Tweezer),
+      tweenjs: VueTweezing.tweenjsHelper(TWEEN),
     })
+
+    function animate() {
+      const now = performance.now()
+      const time = now - lastTime
+      lastTime = now
+      TWEEN.update(time)
+      setTimeout(animate, 17)
+    }
+
+    let lastTime = performance.now()
+    /* animate()*/
+    const tick = () => {
+      TWEEN.update()
+      /* setTimeout(tick, 17)*/
+      requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
 
     window.vm = new Vue({
       el: '#app',
 
-      data () {
+      data() {
         return {
+          source: 'wave',
+          soundPath: './bark.mp3',
+          type: 'triangle',
           frequency: 800,
+          frequencyFactor: 1,
           volume: 0.1,
+          currentSound: 0,
+          soundCount: sounds.length,
+          timeMultiplicator: 1,
+          easing: TWEEN.Easing.Linear.InOut,
         }
       },
 
       computed: {
-        frequencyStep () {
+        frequencyStep() {
           return 10
           // return Math.log10(this.frequency)
         },
 
-        to () {
+        sound() {
+          let {
+            frequency,
+            volume,
+            duration
+          } = sounds[this.currentSound]
+
+          frequency = frequency || (this.lastFrequency - 1)
+          volume = volume || 1
+          this.lastFrequency = frequency
+          frequency *= this.frequencyFactor
+          volume *= this.volume
+          duration *= this.timeMultiplicator
+
+          return {
+            to: {
+              frequency,
+              volume,
+            },
+            duration,
+          }
+        },
+
+        to() {
           return {
             frequency: this.frequency,
             volume: this.volume,

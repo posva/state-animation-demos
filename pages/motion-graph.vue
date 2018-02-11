@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="motion-graph">
     <Motion
       ref="motion"
       v-if="!resetting"
@@ -234,6 +234,10 @@ export default {
   --marker-color: #bf0003;
   --marker-size: 7px;
   --stroke-width: 2px;
+}
+
+.motion-graph {
+  margin-right: calc(var(--marker-size) * 3.4);
 }
 
 .graph .marker::before {

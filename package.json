@@ -14,6 +14,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@tweenjs/tween.js": "^17.2.0",
     "animate.css": "^3.6.1",
     "lodash": "^4.17.5",
     "modern-normalize": "^0.3.0",

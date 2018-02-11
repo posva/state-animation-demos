@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="basic-transition">
     <div class="text-container" @click="on = !on">
       <transition
         enter-active-class="animated bounceInLeft"
@@ -26,10 +26,15 @@ export default {
 <style scoped>
 .text-container {
   cursor: pointer;
+  text-align: left;
   padding: 1rem;
 }
 
 .animated.bounceOutRight {
   position: absolute;
+}
+
+.basic-transition {
+  font-size: 1.5rem;
 }
 </style>

@@ -15,7 +15,7 @@ module.exports = {
   /*
   ** Customize the progress bar color
   */
-  loading: { color: '#111111' },
+  loading: { color: '#eee' },
   /*
   ** Build configuration
   */
@@ -24,18 +24,11 @@ module.exports = {
     ** Run ESLint on save
     */
     extend (config, { isDev, isClient }) {
-      if (isDev && isClient) {
-        config.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules)/,
-        })
-      }
+      config.resolve.mainFields = ['module', 'main']
     },
   },
 
-  plugins: ['~/plugins/motion'],
+  plugins: ['~/plugins/motion', '~/plugins/tweezing'],
 
   css: ['modern-normalize/modern-normalize.css', 'animate.css/animate.css'],
 }
