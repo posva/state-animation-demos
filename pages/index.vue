@@ -7,6 +7,15 @@
       <li>
         <nuxt-link class="button--grey" to="/basic">Basic transition</nuxt-link>
       </li>
+      <li>
+        <nuxt-link class="button--grey" to="/polygon">Polygon</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link class="button--grey" to="/sudoku-motion">Sudoku</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link class="button--grey" to="/music">Music</nuxt-link>
+      </li>
     </ul>
   </section>
 </template>
