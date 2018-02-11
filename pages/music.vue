@@ -1,61 +1,70 @@
 <template>
   <div>
-    <select v-model="mode">
-      <option>normal</option>
-      <option>motion</option>
-      <option>tween.js</option>
-    </select>
-    <br>
-    <input type="range" v-model.number="rate" min="0.05" max="4" step="0.05">
-    <template v-if="mode === 'normal'">
-      <p>Rate: {{ rate }}</p>
-    </template>
-    <Motion :value="rate" :spring="spring" v-else-if="mode === 'motion'">
-      <template slot-scope="{ value }">
-        <br>
-        <input type="range" :value="value" disabled min="0.05" max="4" step="0.05">
-        <p>Rate: {{ setRate(value) }}</p>
-        <label>
-          Stiffness
-          <input v-model.number="spring.stiffness" step="10" type="number"/>
-        </label>
-        <br/>
-        <label>
-          Damping
-          <input v-model.number="spring.damping" step="1" type="number"/>
-        </label>
-        <br>
-        <button class="fun-btn" @click="fun">Fun!</button>
+    <div v-if="progress.loaded < progress.total">
+      Loading ({{ (progress.loaded / progress.total).toFixed(0)}}%)
+      {{ loadingBar }}
+    </div>
+    <div v-else>
+      <button class="audio-btn" @click="play" v-if="!playing">Play</button>
+      <button class="audio-btn" @click="pause" v-else>Pause</button>
+      <br>
+      <select v-model="mode">
+        <option>normal</option>
+        <option>motion</option>
+        <option>tween.js</option>
+      </select>
+      <br>
+      <input type="range" v-model.number="rate" min="0.05" max="4" step="0.05">
+      <template v-if="mode === 'normal'">
+        <p>Rate: {{ rate }}</p>
       </template>
-    </Motion>
-    <template v-else-if="mode === 'tween.js'">
-      <Tweezing :to="rate" tween="tweenjs" :duration="3000" :easing="easing">
-        <div slot-scope="value">
+      <Motion :value="rate" :spring="spring" v-else-if="mode === 'motion'">
+        <template slot-scope="{ value }">
           <br>
           <input type="range" :value="value" disabled min="0.05" max="4" step="0.05">
           <p>Rate: {{ setRate(value) }}</p>
-        </div>
-      </Tweezing>
-      <label>
-        Easing Equation
-        <select v-model="equationType">
-          <option v-for="easing in easings" :value="easing.value">{{ easing.text }}</option>
-        </select>
-      </label>
-      <br>
-      <label>
-        <input v-model="easingType" type="radio" name="easing-type" value="In">
-        In
-      </label>
-      <label>
-        <input v-model="easingType" type="radio" name="easing-type" value="Out">
-        Out
-      </label>
-      <label>
-        <input v-model="easingType" type="radio" name="easing-type" value="InOut">
-        InOut
-      </label>
-    </template>
+          <label>
+            Stiffness
+            <input v-model.number="spring.stiffness" step="10" type="number"/>
+          </label>
+          <br/>
+          <label>
+            Damping
+            <input v-model.number="spring.damping" step="1" type="number"/>
+          </label>
+          <br>
+          <button class="fun-btn" @click="fun">Fun!</button>
+        </template>
+      </Motion>
+      <template v-else-if="mode === 'tween.js'">
+        <Tweezing :to="rate" tween="tweenjs" :duration="3000" :easing="easing">
+          <div slot-scope="value">
+            <br>
+            <input type="range" :value="value" disabled min="0.05" max="4" step="0.05">
+            <p>Rate: {{ setRate(value) }}</p>
+          </div>
+        </Tweezing>
+        <label>
+          Easing Equation
+          <select v-model="equationType">
+            <option v-for="easing in easings" :value="easing.value">{{ easing.text }}</option>
+          </select>
+        </label>
+        <br>
+        <label>
+          <input v-model="easingType" type="radio" name="easing-type" value="In">
+          In
+        </label>
+        <label>
+          <input v-model="easingType" type="radio" name="easing-type" value="Out">
+          Out
+        </label>
+        <label>
+          <input v-model="easingType" type="radio" name="easing-type" value="InOut">
+          InOut
+        </label>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -73,13 +82,24 @@ export default {
     return {
       mode: 'normal',
       rate: 1,
+      playing: true,
+
+      // motion
       spring: {
         stiffness: 170,
         damping: 26,
         precision: 0.01,
       },
+
+      // tween.js
       equationType: TWEEN.Easing.Linear,
       easingType: 'In',
+
+      // loading
+      progress: {
+        loaded: 0,
+        total: 1,
+      },
     }
   },
 
@@ -94,12 +114,25 @@ export default {
         text: easing,
       }))
     },
+
+    loadingBar() {
+      const n = 10
+      const done = Math.floor(this.progress.loaded / this.progress.total / 10)
+      return '🔊'.repeat(done) + '🔇'.repeat(n - done)
+    },
   },
 
   mounted() {
-    this.song = p.loadSound(music, () => {
-      this.song.loop()
-    })
+    this.song = p.loadSound(
+      music,
+      () => {
+        this.song.loop()
+      },
+      console.error,
+      ({ loaded, total }) => {
+        this.progress = { loaded, total }
+      }
+    )
   },
 
   destroyed() {
@@ -121,6 +154,16 @@ export default {
       this.spring.damping = 0
       await this.$nextTick()
       this.rate = 1
+    },
+
+    play() {
+      this.song.play()
+      this.playing = true
+    },
+
+    pause() {
+      this.song.pause()
+      this.playing = false
     },
   },
 
@@ -144,5 +187,8 @@ input[type='range'] {
 
 .fun-btn {
   margin-top: 1rem;
+}
+.audio-btn {
+  margin: 1rem;
 }
 </style>
