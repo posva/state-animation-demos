@@ -30,5 +30,5 @@ module.exports = {
 
   plugins: ['~/plugins/motion', '~/plugins/tweezing'],
 
-  css: ['modern-normalize/modern-normalize.css', 'animate.css/animate.css'],
+  css: ['modern-normalize/modern-normalize.css', 'animate.css/animate.css', '~/assets/main.css'],
 }
