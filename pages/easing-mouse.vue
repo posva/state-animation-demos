@@ -1,0 +1,63 @@
+<template>
+  <div id="easing-mouse" @mousemove="mouseY = $event.clientY">
+    <Tweezing :to="1" tween="custom" :time="mouseYPer">
+      <div slot-scope="value">
+        <pre>{{ value }}</pre>
+        <div class="ball" :style="ballStyle(value)"></div>
+      </div>
+    </Tweezing>
+    <div class="line"></div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      mouseY: 0,
+    }
+  },
+
+  methods: {
+    ballStyle(value) {
+      return {
+        transform: `translateY(${value * (document.documentElement.clientHeight - 155)}px)`,
+      }
+    },
+  },
+
+  computed: {
+    mouseYPer() {
+      return this.mouseY / document.documentElement.clientHeight
+    },
+  },
+}
+</script>
+
+<style scoped>
+#easing-mouse {
+  width: 100vh;
+  height: 100vh;
+  position: relative;
+}
+
+.line {
+  position: absolute;
+  left: 0;
+  bottom: 50px;
+  width: 100%;
+  height: 0.15rem;
+  background-color: var(--color-snow);
+}
+
+.ball {
+  --ball-size: 100px;
+  position: absolute;
+  top: 0;
+  left: calc(50% - var(--ball-size) / 2);
+  width: var(--ball-size);
+  height: var(--ball-size);
+  border-radius: 50%;
+  background-color: var(--color-purple);
+}
+</style>

@@ -7997,8 +7997,8 @@ vue-template-es2015-compiler@^1.6.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
 vue-tweezing@^0.1.2:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/vue-tweezing/-/vue-tweezing-0.1.5.tgz#d2276e642c80f9775dac05abae653ec8a6a461a7"
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/vue-tweezing/-/vue-tweezing-0.1.6.tgz#51d4ec86e23856359d682d7662f26454d12be3bd"
 
 vue@^2.5.13:
   version "2.5.13"

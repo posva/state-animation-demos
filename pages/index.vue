@@ -2,13 +2,19 @@
   <section>
     <ul class="links">
       <li>
-        <nuxt-link class="link" to="/motion-graph">Motion graph</nuxt-link>
-      </li>
-      <li>
         <nuxt-link class="link" to="/basic-transition">Basic transition</nuxt-link>
       </li>
       <li>
+        <nuxt-link class="link" to="/motion-graph">Motion graph</nuxt-link>
+      </li>
+      <li>
         <nuxt-link class="link" to="/polygon">Polygon</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link class="link" to="/easing-mouse">Easing with mouse</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link class="link" to="/plot-motion">Plot</nuxt-link>
       </li>
       <li>
         <nuxt-link class="link" to="/sudoku-motion">Sudoku</nuxt-link>
