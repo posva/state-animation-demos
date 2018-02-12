@@ -1,5 +1,6 @@
 <template>
-  <div id="easing-mouse" @mousemove="mouseY = $event.clientY">
+  <div id="easing-mouse">
+    <GlobalEvents @mousemove.passive="mouseY = $event.clientY" @touchmove.prevent="mouseY = $event.touches[0].clientY"/>
     <Tweezing :to="1" tween="custom" :time="mouseYPer">
       <div slot-scope="value">
         <pre>{{ value }}</pre>
@@ -36,9 +37,9 @@ export default {
 
 <style scoped>
 #easing-mouse {
-  width: 100vh;
-  height: 100vh;
-  position: relative;
+  width: 100%;
+  max-height: calc(100% - 100px);
+  /* position: relative; */
 }
 
 .line {

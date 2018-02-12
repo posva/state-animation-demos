@@ -31,7 +31,7 @@ module.exports = {
 
   modules: ['@nuxtjs/pwa'],
 
-  plugins: ['~/plugins/motion', '~/plugins/tweezing'],
+  plugins: ['~/plugins/motion', '~/plugins/tweezing', '~/plugins/global-events'],
 
   css: ['modern-normalize/modern-normalize.css', 'animate.css/animate.css', '~/assets/main.css'],
 }
