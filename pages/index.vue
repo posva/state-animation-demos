@@ -5,7 +5,7 @@
         <nuxt-link class="link" to="/motion-graph">Motion graphs</nuxt-link>
       </li>
       <li>
-        <nuxt-link class="link" to="/basic">Basic transition</nuxt-link>
+        <nuxt-link class="link" to="/basic-transition">Basic transition</nuxt-link>
       </li>
       <li>
         <nuxt-link class="link" to="/polygon">Polygon</nuxt-link>

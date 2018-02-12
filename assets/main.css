@@ -180,3 +180,8 @@ button {
     outline-offset: -0.3rem;
   }
 }
+
+canvas[id^='defaultCanvas'] {
+  display: none;
+  visibility: hidden;
+}
