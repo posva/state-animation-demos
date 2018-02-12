@@ -36,13 +36,10 @@ export default {
 </script>
 
 <style scoped>
-:root {
-  --size: 25px;
-}
 .sudoku {
   display: flex;
   flex-wrap: wrap;
-  width: calc(var(--size) * 9 - 6px);
+  width: calc(var(--sudoku-cell-size) * 9 - 6px);
   margin: auto;
   margin-top: 10px;
 }
@@ -50,8 +47,8 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: var(--size);
-  height: var(--size);
+  width: var(--sudoku-cell-size);
+  height: var(--sudoku-cell-size);
   border: 1px solid #aaa;
   margin-right: -1px;
   margin-bottom: -1px;

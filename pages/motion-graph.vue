@@ -22,22 +22,22 @@
       </template>
     </Motion>
 
-    <label>
+    <label class="text">
       Target value
       <input v-model.number="maxValue" @input="delayedStart" step="10" type="number"/>
     </label>
     <br/>
-    <label>
+    <label class="text">
       Stiffness
       <input v-model.number="spring.stiffness" @input="delayedStart" step="10" type="number"/>
     </label>
     <br/>
-    <label>
+    <label class="text">
       Damping
       <input v-model.number="spring.damping" step="1" @input="delayedStart" type="number"/>
     </label>
     <br/>
-    <label>
+    <label class="text">
       Precision
       <input v-model.number="spring.precision" step="0.01" @input="delayedStart" type="number"/>
     </label>
@@ -55,7 +55,7 @@ import presets from 'vue-motion/src/presets'
 import debounce from 'lodash/debounce'
 
 export default {
-  data () {
+  data() {
     return {
       spring: {
         stiffness: 170,
@@ -78,40 +78,40 @@ export default {
   },
 
   computed: {
-    svgWidth () {
+    svgWidth() {
       return 300
     },
 
-    svgHeight () {
+    svgHeight() {
       return 140
     },
 
-    aspectRatio () {
+    aspectRatio() {
       return this.svgHeight / (this.svgHeight - this.svgTop)
     },
 
-    maxValueProportion () {
+    maxValueProportion() {
       return this.maxValue / 100
     },
 
-    presets () {
+    presets() {
       return presets
     },
 
-    svgTop () {
+    svgTop() {
       return Math.min(-this.maxRegisteredValue + this.svgHeight, 0) - 10
     },
 
-    chartWidth () {
+    chartWidth() {
       return Math.max(this.svgWidth, this.lastRendered - this.initialTime)
     },
 
-    viewBox () {
+    viewBox() {
       return `0 ${this.svgTop} ${this.chartWidth} ${this.svgHeight - this.svgTop}`
     },
   },
 
-  created () {
+  created() {
     this.lastTime = 100
     this.initialTime = 0
     this.lastRendered = 100
@@ -122,7 +122,7 @@ export default {
   },
 
   methods: {
-    async start () {
+    async start() {
       await this.reset()
       if (!this.isTracking) {
         this.pathD = `M0,${this.svgHeight} l0,0 `
@@ -136,17 +136,17 @@ export default {
       this.target = this.maxValue
     },
 
-    delayedStart: debounce(function () {
+    delayedStart: debounce(function() {
       this.start()
     }, 100),
 
-    setSpring (spring) {
+    setSpring(spring) {
       this.spring = { ...spring }
       this.spring.precision = this.spring.precision || 0.01
       this.delayedStart()
     },
 
-    async reset () {
+    async reset() {
       // small hack to reset it by removing it before changing the target
       this.resetting = true
       await this.$nextTick()
@@ -155,7 +155,7 @@ export default {
       this.isTracking = false
     },
 
-    addPoint (y) {
+    addPoint(y) {
       if (!this.isTracking) return
       const now = performance.now()
       const elapsed = now - this.lastTime

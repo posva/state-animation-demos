@@ -50,12 +50,12 @@ export default {
   computed: {
     positions() {
       return this.cells.reduce((positions, cell, i) => {
-        const size = 24
+        const size = 31
         const x = i % 9
         const y = Math.floor(i / 9)
         positions[cell.id] = {
-          x: x * size + 1 + Math.floor((x - 1) / 3),
-          y: y * size + 1 + Math.floor((y - 1) / 3),
+          x: x * size + 1 + Math.floor(x / 3),
+          y: y * size + 1 + Math.floor(y / 3),
         }
         return positions
       }, Array(this.cells.length))
@@ -65,12 +65,9 @@ export default {
 </script>
 
 <style scoped>
-:root {
-  --size: 25px;
-}
 .sudoku {
-  width: calc(var(--size) * 9 - 6px);
-  height: calc(var(--size) * 9 - 6px);
+  width: calc(var(--sudoku-cell-size) * 9 - 6px);
+  height: calc(var(--sudoku-cell-size) * 9 - 6px);
   margin: auto;
   margin-top: 10px;
 }
@@ -79,8 +76,8 @@ export default {
   position: absolute;
   justify-content: space-around;
   align-items: center;
-  width: var(--size);
-  height: var(--size);
+  width: var(--sudoku-cell-size);
+  height: var(--sudoku-cell-size);
   border: 1px solid #aaa;
   margin-right: -1px;
   margin-bottom: -1px;

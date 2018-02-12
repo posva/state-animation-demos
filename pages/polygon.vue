@@ -1,13 +1,13 @@
 <template>
   <div>
-    <svg width="200" height="200">
+    <svg width="300" height="300">
       <Tweezing :to="stats" tween="tweenjs" :duration="updateInterval" :easing="easing">
         <polygon
           slot-scope="points"
           :points="transformToPoints(points)"
         ></polygon>
       </Tweezing>
-      <circle cx="100" cy="100" r="90"></circle>
+      <circle cx="150" cy="150" r="140"></circle>
     </svg>
     <label>Sides: {{ sides }}</label>
     <input
@@ -16,21 +16,22 @@
       max="500"
       v-model.number="sides"
     >
-    <label>Minimum Radius: {{ minRadius }}%</label>
+    <label>Minimum Radius: {{ (minRadius * 100).toFixed(0) }}%</label>
     <input
       type="range"
       min="0"
-      max="90"
+      step="0.01"
+      max="0.9"
       v-model.number="minRadius"
     >
-    <label>Update Interval: {{ updateInterval }} milliseconds</label>
+    <label>Update Interval: {{ updateInterval }}ms</label>
     <input
       type="range"
       min="10"
       max="2000"
       v-model.number="updateInterval"
     >
-    <label>
+    <label class="text">
       Easing Equation
       <select v-model="equationType">
         <option v-for="easing in easings" :value="easing.value">{{ easing.text }}</option>
@@ -59,11 +60,11 @@ function valueToPoint(value, index, total) {
   const x = 0
   const y = -value * 0.9
   const angle = Math.PI * 2 / total * index
-  const cos = Math.cos(angle)
-  const sin = Math.sin(angle)
+  const cos = Math.cos(angle) * 150
+  const sin = Math.sin(angle) * 150
   return {
-    x: x * cos - y * sin + 100,
-    y: x * sin + y * cos + 100,
+    x: x * cos - y * sin + 150,
+    y: x * sin + y * cos + 150,
   }
 }
 
@@ -83,12 +84,12 @@ export default {
     return {
       sides: defaultSides,
       stats: Array.from(Array(defaultSides), () => 0),
-      minRadius: 50,
+      minRadius: 0.5,
       updateInterval: 500,
 
       // custom easings
       equationType: TWEEN.Easing.Linear,
-      easingType: 'In',
+      easingType: 'Out',
     }
   },
 
@@ -117,7 +118,7 @@ export default {
     randomizeStats() {
       this.stats = Array.from(
         Array(this.sides),
-        () => (100 - this.minRadius) * Math.random() + this.minRadius
+        () => (1 - this.minRadius) * Math.random() + this.minRadius
       )
     },
 
@@ -141,7 +142,7 @@ svg {
   display: block;
 }
 polygon {
-  fill: #41b883;
+  fill: var(--color-purple);
 }
 circle {
   fill: transparent;

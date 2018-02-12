@@ -183,12 +183,6 @@ export default {
 }
 </script>
 
-<style>
-html {
-  font-size: 22px;
-}
-</style>
-
 <style scoped>
 input[type='range'] {
   max-width: 15rem;

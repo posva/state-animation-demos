@@ -13,11 +13,14 @@
 
   --font-face: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  /* Must change based on Font */
+  --sudoku-cell-size: 32px;
 }
 
 html {
   font-family: var(--font-face);
-  font-size: 16px;
+  font-size: 22px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -36,39 +39,6 @@ html {
   align-items: center;
   text-align: center;
   background-color: #111111;
-}
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-button--grey {
-  display: inline-block;
-  border-radius: 0.3rem;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
 }
 
 input[type='text'],
@@ -209,60 +179,4 @@ button {
     outline: 0.0625rem dotted #959595;
     outline-offset: -0.3rem;
   }
-}
-
-button.-regular {
-  color: #202129;
-  background-color: #f2f2f2;
-
-  &:hover {
-    color: #202129;
-    background-color: #e1e2e2;
-    opacity: 1;
-  }
-
-  &:active {
-    background-color: #d5d6d6;
-    opacity: 1;
-  }
-}
-
-button.-dark {
-  color: var(--color-snow);
-  background: var(--color-dark);
-
-  &:focus {
-    outline: 0.0625rem dotted white;
-    outline-offset: -0.3rem;
-  }
-}
-
-button.-green {
-  color: var(--color-snow);
-  background: var(--color-grass);
-}
-
-button.-blue {
-  color: var(--color-snow);
-  background: var(--color-ocean);
-}
-
-button.-salmon {
-  color: var(--color-snow);
-  background: var(--color-salmon);
-}
-
-button.-sun {
-  color: #f15c5c;
-  background: var(--color-sun);
-}
-
-button.-alge {
-  color: #e7ff20;
-  background: var(--color-alge);
-}
-
-button.-flower {
-  color: #fe8cdf;
-  background: var(--color-flower);
 }
