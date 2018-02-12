@@ -112,6 +112,25 @@ input[type='range'] {
   }
 }
 
+input:active,
+input:focus,
+input:hover {
+  color: var(--color-purple);
+}
+
+label {
+  transition: color 150ms;
+  &:hover,
+  &:active,
+  &:focus {
+    color: var(--color-purple);
+  }
+}
+
+label.radio {
+  cursor: pointer;
+}
+
 input[type='radio'] {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -122,6 +141,8 @@ input[type='radio'] {
   border: 0.4rem solid var(--color-smoke);
   background-color: var(--color-purple);
   transition: border 150ms;
+
+  cursor: pointer;
 
   &:checked {
     border: 0.15rem solid var(--color-smoke);
@@ -136,16 +157,15 @@ button {
 
   cursor: pointer;
   user-select: none;
-  transition: all 150ms linear;
   text-align: center;
   white-space: nowrap;
   text-decoration: none !important;
   text-transform: none;
   text-transform: capitalize;
 
-  background-color: #f2f2f2;
-  color: #202129;
-  border: 0 none;
+  background-color: var(--color-purple);
+  color: var(--color-snow);
+  border: 0.15rem solid var(--color-purple);
   border-radius: 0.3rem;
 
   font-size: 1rem;
@@ -161,27 +181,36 @@ button {
 
   box-shadow: 2px 5px 10px var(--color-dark);
 
-  &:hover {
-    transition: all 150ms linear;
+  transition-property: border-color, color, background-color, opacity;
+  transition-duration: 150ms;
 
-    color: #202129;
-    background-color: #e1e2e2;
-    opacity: 0.85;
+  &:hover {
+    background-color: var(--color-purple);
+    border: 0.15rem solid var(--color-snow);
   }
 
   &:active {
-    background-color: #d5d6d6;
-    transition: all 150ms linear;
-    opacity: 0.75;
-  }
-
-  &:focus {
-    outline: 0.0625rem dotted #959595;
-    outline-offset: -0.3rem;
+    color: var(--color-purple);
+    background-color: var(--color-smoke);
   }
 }
 
 canvas[id^='defaultCanvas'] {
   display: none;
   visibility: hidden;
+}
+
+select {
+  background: var(--color-smoke);
+  color: var(--color-dark-purple);
+  border: 0.05rem solid var(--color-dark-purple);
+  outline: 0;
+  cursor: pointer;
+  height: 1.5rem;
+
+  transition: color 150ms;
+
+  &:hover {
+    color: var(--color-purple);
+  }
 }

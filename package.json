@@ -14,6 +14,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@nuxtjs/pwa": "^2.0.5",
     "@tweenjs/tween.js": "^17.2.0",
     "animate.css": "^3.6.1",
     "lodash": "^4.17.5",

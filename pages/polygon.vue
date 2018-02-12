@@ -38,15 +38,15 @@
       </select>
     </label>
     <br>
-    <label>
+    <label class="radio">
       <input v-model="easingType" type="radio" name="easing-type" value="In">
       In
     </label>
-    <label>
+    <label class="radio">
       <input v-model="easingType" type="radio" name="easing-type" value="Out">
       Out
     </label>
-    <label>
+    <label class="radio">
       <input v-model="easingType" type="radio" name="easing-type" value="InOut">
       InOut
     </label>
