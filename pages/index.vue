@@ -1,20 +1,20 @@
 <template>
-  <section class="container">
+  <section>
     <ul class="links">
       <li>
-        <nuxt-link class="button--grey" to="/motion-graph">Motion graphs</nuxt-link>
+        <nuxt-link class="link" to="/motion-graph">Motion graphs</nuxt-link>
       </li>
       <li>
-        <nuxt-link class="button--grey" to="/basic">Basic transition</nuxt-link>
+        <nuxt-link class="link" to="/basic">Basic transition</nuxt-link>
       </li>
       <li>
-        <nuxt-link class="button--grey" to="/polygon">Polygon</nuxt-link>
+        <nuxt-link class="link" to="/polygon">Polygon</nuxt-link>
       </li>
       <li>
-        <nuxt-link class="button--grey" to="/sudoku-motion">Sudoku</nuxt-link>
+        <nuxt-link class="link" to="/sudoku-motion">Sudoku</nuxt-link>
       </li>
       <li>
-        <nuxt-link class="button--grey" to="/music">Music</nuxt-link>
+        <nuxt-link class="link" to="/music">Music</nuxt-link>
       </li>
     </ul>
   </section>
@@ -29,9 +29,25 @@ export default {}
   padding-top: 15px;
 }
 
-.links li {
+.links li,
+.links {
   list-style: none;
   margin: 0;
-  margin-bottom: 0.3rem;
+  padding: 0;
+}
+
+.link {
+  color: var(--color-snow);
+  text-decoration-style: dashed;
+  text-decoration-color: var(--color-purple);
+  display: block;
+  margin-bottom: 0.5rem;
+
+  transition: text-decoration-color 150ms, color 150ms;
+
+  &:hover {
+    text-decoration-color: var(--color-snow);
+    color: var(--color-purple);
+  }
 }
 </style>

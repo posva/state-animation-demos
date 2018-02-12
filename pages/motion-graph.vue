@@ -16,7 +16,7 @@
           </svg>
           <div class="marker" :style="{ transform: `translateY(${-value * aspectRatio}px)`}"></div>
         </div>
-        <p>Current value: {{ value }} {{ addPoint(value) }}</p>
+        <p>Current value: {{ addPoint(value).toFixed(2) }}</p>
         <p>Last rendered: {{ Math.round(lastRendered - initialTime) }}ms</p>
         <p>Finished at {{ Math.round(lastTime - initialTime) }}ms</p>
       </template>
@@ -156,11 +156,11 @@ export default {
     },
 
     addPoint(y) {
-      if (!this.isTracking) return
+      if (!this.isTracking) return y
       const now = performance.now()
       const elapsed = now - this.lastTime
       // do not render too much
-      if (elapsed <= 15) return
+      if (elapsed <= 15) return y
       // make sure we compute all the time
       const totalElapsed = now - this.lastRendered
       /* y = this.maxValue - y + 80 */
@@ -171,6 +171,7 @@ export default {
       }
       this.lastY = y
       this.lastTime = now
+      return y
     },
   },
 }

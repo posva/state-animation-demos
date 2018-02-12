@@ -6,14 +6,15 @@
       leave-active-class="animated hinge"
       @after-enter="play"
     >
-      <div v-if="progress < 1" key="loading">
+      <div v-if="progress <= 1" key="loading">
         Loading ({{ (progress * 100).toFixed(0)}}%)
+        <br>
         {{ loadingBar }}
       </div>
       <div v-else>
-        <button class="audio-btn" @click="play" v-if="!playing">Play</button>
-        <button class="audio-btn" @click="pause" v-else>Pause</button>
-        <button class="audio-btn" @click="toggleVolume">Toggle volume</button>
+        <button class="audio-btn" @click="play" v-if="!playing">⏯ Play</button>
+        <button class="audio-btn" @click="pause" v-else>⏸ Pause</button>
+        <button class="audio-btn" @click="toggleVolume">🔈 Toggle volume</button>
         <br>
         <select v-model="mode" class="mb1">
           <option>normal</option>
@@ -23,12 +24,12 @@
         <input type="range" v-model.number="rate" min="0.05" max="4" step="0.05">
         <br>
         <template v-if="mode === 'normal'">
-          <p>Rate: {{ rate }}</p>
+          <p>Rate: {{ rate.toFixed(2) }}</p>
         </template>
         <Motion :value="rate" :spring="spring" v-else-if="mode === 'motion'">
           <template slot-scope="{ value }">
             <input type="range" :value="value" disabled min="0.05" max="4" step="0.05">
-            <p>Rate: {{ setRate(value) }}</p>
+            <p>Rate: {{ setRate(value).toFixed(2) }}</p>
             <label class="text">
               Stiffness
               <input v-model.number="spring.stiffness" step="10" type="number"/>
@@ -37,14 +38,14 @@
               Damping
               <input v-model.number="spring.damping" step="1" type="number"/>
             </label>
-            <button class="fun-btn" @click="fun">Fun!</button>
+            <button class="fun-btn" @click="fun">🎩 Fun!</button>
           </template>
         </Motion>
         <template v-else-if="mode === 'tween.js'">
           <Tweezing :to="rate" tween="tweenjs" :duration="3000" :easing="easing">
             <div slot-scope="value">
               <input type="range" :value="value" disabled min="0.05" max="4" step="0.05">
-              <p>Rate: {{ setRate(value) }}</p>
+              <p>Rate: {{ setRate(value).toFixed(2) }}</p>
             </div>
           </Tweezing>
           <label class="text">
@@ -126,8 +127,10 @@ export default {
   mounted() {
     this.song = p.loadSound(
       music,
-      () => {
+      async () => {
         this.progress = 1
+        await this.$nextTick()
+        this.progress = 2
       },
       console.error,
       progress => (this.progress = progress)
@@ -191,6 +194,7 @@ input[type='range'] {
 
 .fun-btn {
   margin-top: 1rem;
+  background-color: var(--color-grass);
 }
 .audio-btn {
   /* margin: 1rem; */
