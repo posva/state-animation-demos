@@ -187,13 +187,19 @@ export default {
 }
 </script>
 
+<style>
+html {
+  font-size: 32px;
+}
+</style>
+
 <style scoped>
 select {
   margin-bottom: 1rem;
 }
 
 input[type='range'] {
-  max-width: 240px;
+  max-width: 15rem;
   width: 100vw;
 }
 
@@ -201,7 +207,7 @@ input[type='range'] {
   margin-top: 1rem;
 }
 .audio-btn {
-  margin: 1rem;
+  /* margin: 1rem; */
 }
 
 .animated.hinge {

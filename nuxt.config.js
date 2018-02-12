@@ -26,6 +26,7 @@ module.exports = {
     extend (config, { isDev, isClient }) {
       config.resolve.mainFields = ['module', 'main']
     },
+    postcss: [require('postcss-nested')()],
   },
 
   plugins: ['~/plugins/motion', '~/plugins/tweezing'],
