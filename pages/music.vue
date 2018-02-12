@@ -15,43 +15,39 @@
         <button class="audio-btn" @click="pause" v-else>Pause</button>
         <button class="audio-btn" @click="toggleVolume">Toggle volume</button>
         <br>
-        <select v-model="mode">
+        <select v-model="mode" class="mb1">
           <option>normal</option>
           <option>motion</option>
           <option>tween.js</option>
         </select>
-        <br>
         <input type="range" v-model.number="rate" min="0.05" max="4" step="0.05">
+        <br>
         <template v-if="mode === 'normal'">
           <p>Rate: {{ rate }}</p>
         </template>
         <Motion :value="rate" :spring="spring" v-else-if="mode === 'motion'">
           <template slot-scope="{ value }">
-            <br>
             <input type="range" :value="value" disabled min="0.05" max="4" step="0.05">
             <p>Rate: {{ setRate(value) }}</p>
-            <label>
+            <label class="text">
               Stiffness
               <input v-model.number="spring.stiffness" step="10" type="number"/>
             </label>
-            <br/>
-            <label>
+            <label class="text">
               Damping
               <input v-model.number="spring.damping" step="1" type="number"/>
             </label>
-            <br>
             <button class="fun-btn" @click="fun">Fun!</button>
           </template>
         </Motion>
         <template v-else-if="mode === 'tween.js'">
           <Tweezing :to="rate" tween="tweenjs" :duration="3000" :easing="easing">
             <div slot-scope="value">
-              <br>
               <input type="range" :value="value" disabled min="0.05" max="4" step="0.05">
               <p>Rate: {{ setRate(value) }}</p>
             </div>
           </Tweezing>
-          <label>
+          <label class="text">
             Easing Equation
             <select v-model="equationType">
               <option v-for="easing in easings" :value="easing.value">{{ easing.text }}</option>
@@ -189,15 +185,11 @@ export default {
 
 <style>
 html {
-  font-size: 32px;
+  font-size: 22px;
 }
 </style>
 
 <style scoped>
-select {
-  margin-bottom: 1rem;
-}
-
 input[type='range'] {
   max-width: 15rem;
   width: 100vw;
