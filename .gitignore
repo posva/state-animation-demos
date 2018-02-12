@@ -2,3 +2,4 @@ node_modules
 dist
 .nuxt
 npm-debug.log
+static/sw.js

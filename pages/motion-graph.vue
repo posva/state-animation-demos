@@ -4,6 +4,7 @@
       ref="motion"
       v-if="!resetting"
       :value="target"
+      class="svg-container"
       tag="div"
       @motion-end="isTracking = false"
       :spring="spring"
@@ -26,24 +27,22 @@
       Target value
       <input v-model.number="maxValue" @input="delayedStart" step="10" type="number"/>
     </label>
-    <br/>
     <label class="text">
       Stiffness
       <input v-model.number="spring.stiffness" @input="delayedStart" step="10" type="number"/>
     </label>
-    <br/>
     <label class="text">
       Damping
       <input v-model.number="spring.damping" step="1" @input="delayedStart" type="number"/>
     </label>
-    <br/>
     <label class="text">
       Precision
       <input v-model.number="spring.precision" step="0.01" @input="delayedStart" type="number"/>
     </label>
-    <br/>
-    <button v-for="(preset, name) in presets" @click="setSpring(preset)">{{ name }}</button>
-    <br/>
+    <div class="limit-width">
+      <button v-for="(preset, name) in presets" @click="setSpring(preset)">{{ name }}</button>
+    </div>
+    <hr style="border none; margin: .35rem 0;">
 
     <button @click="reset">Reset</button>
     <button @click="start">Start</button>
@@ -238,7 +237,20 @@ export default {
 }
 
 .motion-graph {
-  margin-right: calc(var(--marker-size) * 3.4);
+  & .svg-container {
+    margin-right: calc(var(--marker-size) * 3.4);
+  }
+
+  & label {
+    margin: 0.15rem;
+  }
+
+  & button {
+    width: 3rem;
+    padding: 0.05rem;
+    margin: 0.1rem 0.2rem;
+    display: inline-block;
+  }
 }
 
 .graph .marker::before {

@@ -2,7 +2,7 @@
   <section>
     <ul class="links">
       <li>
-        <nuxt-link class="link" to="/motion-graph">Motion graphs</nuxt-link>
+        <nuxt-link class="link" to="/motion-graph">Motion graph</nuxt-link>
       </li>
       <li>
         <nuxt-link class="link" to="/basic-transition">Basic transition</nuxt-link>
