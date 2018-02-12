@@ -5,6 +5,9 @@
         <nuxt-link class="link" to="/basic-transition">Basic transition</nuxt-link>
       </li>
       <li>
+        <nuxt-link class="link" to="/easings-grap">Easings grap</nuxt-link>
+      </li>
+      <li>
         <nuxt-link class="link" to="/motion-graph">Motion graph</nuxt-link>
       </li>
       <li>
