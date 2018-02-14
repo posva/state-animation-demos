@@ -31,4 +31,4 @@ function animate (time) {
   requestAnimationFrame(animate)
   TWEEN.update(time)
 }
-requestAnimationFrame(animate)
+if (process.client) requestAnimationFrame(animate)
