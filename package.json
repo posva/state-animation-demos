@@ -22,7 +22,7 @@
     "nuxt": "^1.0.0",
     "p5": "^0.6.0",
     "vue-global-events": "^1.0.2",
-    "vue-motion": "^0.2.0",
+    "vue-motion": "^0.2.2",
     "vue-tweezing": "^0.1.2"
   },
   "devDependencies": {

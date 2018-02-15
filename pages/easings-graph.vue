@@ -67,6 +67,7 @@ export default {
       pathD: '',
 
       // last time we called addPoint
+      initialTime: 0,
       lastTime: 0,
       // last time we added a point into the path
       lastRendered: 0,
@@ -115,7 +116,7 @@ export default {
     },
   },
 
-  created() {
+  mounted() {
     this.lastTime = 100
     this.initialTime = 0
     this.lastRendered = 100

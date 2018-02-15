@@ -21,15 +21,16 @@ export default {
 
   methods: {
     ballStyle(value) {
+      const size = process.client ? document.documentElement.clientHeight : 155
       return {
-        transform: `translateY(${value * (document.documentElement.clientHeight - 155)}px)`,
+        transform: `translateY(${value * (size - 155)}px)`,
       }
     },
   },
 
   computed: {
     mouseYPer() {
-      return this.mouseY / document.documentElement.clientHeight
+      return process.client ? this.mouseY / document.documentElement.clientHeight : 0
     },
   },
 }

@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import presets from 'vue-motion/src/presets'
+import presets from '~/plugins/presets'
 import debounce from 'lodash/debounce'
 
 export default {
@@ -69,6 +69,7 @@ export default {
       pathD: '',
 
       // last time we called addPoint
+      initialTime: 0,
       lastTime: 0,
       // last time we added a point into the path
       lastRendered: 0,
@@ -110,7 +111,7 @@ export default {
     },
   },
 
-  created() {
+  start() {
     this.lastTime = 100
     this.initialTime = 0
     this.lastRendered = 100

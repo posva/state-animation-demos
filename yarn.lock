@@ -7961,9 +7961,9 @@ vue-meta@^1.4.2:
     lodash.isplainobject "^4.0.6"
     object-assign "^4.1.1"
 
-vue-motion@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/vue-motion/-/vue-motion-0.2.0.tgz#5ce9441eea605624d66d0d94688d1f8ef26bfe6f"
+vue-motion@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/vue-motion/-/vue-motion-0.2.2.tgz#1989df26ffe08b655d796cc90cde26b2db96268e"
 
 vue-router@^3.0.1:
   version "3.0.1"

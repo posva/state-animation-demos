@@ -8,16 +8,16 @@
 
     <svg viewBox="0 0 400 400" :style="{ transform: `translateY(${370 - getMax}px)` }">
       <!--xaxis -->
-      <g targetVal="targetVal"  class="xaxis">
+      <g class="xaxis">
         <line x1="-2" :y1="getMax - 369" x2="365" :y2="getMax - 369"/>
-        <g v-for="(select, index) in targetVal">
-          <line y1="0" y2="7" v-bind="{ 'x1':index*10, 'x2':index*10 }"/>
-          <text v-if="index % 5 === 0" v-bind="{ 'x':index*10, 'y':20 }">{{ index }}</text>
+        <g v-for="(select, index) in selected">
+          <line :y1="getMax - 369" :y2="getMax - 362" v-bind="{ 'x1':index*10, 'x2':index*10 }"/>
+          <text v-if="index % 5 === 0" v-bind="{ 'x':index*10, 'y': getMax - 349 }">{{ index }}</text>
         </g>
       </g>
 
       <!--yaxis -->
-      <g targetVal="targetVal" class="yaxis">
+      <g class="yaxis">
         <line x1="0" y1="1" :x2="getMax" y2="1"/>
         <g v-for="n in getMaxRange">
           <line y1="0" y2="7" v-bind="{ 'x1':n*10, 'x2':n*10 }"/>
