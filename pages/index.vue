@@ -22,6 +22,9 @@
       <li>
         <nuxt-link class="link" to="/sudoku-motion">Sudoku</nuxt-link>
       </li>
+      <li>
+        <nuxt-link class="link" to="/music">Music</nuxt-link>
+      </li>
     </ul>
   </section>
 </template>
