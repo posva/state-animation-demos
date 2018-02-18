@@ -3,3 +3,4 @@ dist
 .nuxt
 npm-debug.log
 sw.*
+.DS_Store
