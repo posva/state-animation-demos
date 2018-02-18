@@ -3,7 +3,7 @@
     <GlobalEvents @mousemove.passive="mouseY = $event.clientY" @touchmove.prevent="mouseY = $event.touches[0].clientY"/>
     <Tweezing :to="1" tween="custom" :time="mouseYPer">
       <div slot-scope="value">
-        <pre>{{ value }}</pre>
+        <pre>{{ (100 * mouseYPer).toFixed(2) }}%</pre>
         <div class="ball" :style="ballStyle(value)"></div>
       </div>
     </Tweezing>
