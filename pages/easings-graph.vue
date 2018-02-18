@@ -44,7 +44,7 @@
     </label>
 
     <br>
-    <button @click="reset">Reset</button>
+    <button @click="stop">Stop</button>
     <button @click="start">Start</button>
   </div>
 </template>
@@ -128,7 +128,7 @@ export default {
 
   methods: {
     async start() {
-      await this.reset()
+      await this.stop()
       if (!this.isTracking) {
         this.pathD = `M0,${this.svgHeight} l0,0 `
         this.isTracking = true
@@ -145,13 +145,14 @@ export default {
       this.start()
     }, 100),
 
-    async reset() {
+    async stop() {
       // small hack to reset it by removing it before changing the target
       this.resetting = true
       await this.$nextTick()
       this.target = 0
       this.resetting = false
       this.isTracking = false
+      await this.$nextTick()
     },
 
     addPoint(y) {
