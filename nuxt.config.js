@@ -33,4 +33,14 @@ module.exports = {
   plugins: ['~/plugins/motion', '~/plugins/tweezing', '~/plugins/global-events', { src: '~plugins/ga.js', ssr: false }],
 
   css: ['modern-normalize/modern-normalize.css', 'animate.css/animate.css', '~/assets/main.css'],
+
+  manifest: {
+    name: 'State Animations Demos',
+    short_name: 'State Animations',
+    lang: 'en',
+    background_color: '#111111',
+    theme_color: '#8652e7',
+    display: 'standalone',
+    description: 'Demos for my State Animations talk',
+  },
 }
