@@ -119,8 +119,9 @@ export default {
 
     loadingBar() {
       const n = 10
-      const done = Math.floor(this.progress * n)
-      return '🔊 '.repeat(done) + '🔇 '.repeat(n - done)
+      const done = Math.min(Math.floor(this.progress * n), 10)
+      console.log(done)
+      return '🔊'.repeat(done) + '🔇'.repeat(n - done)
     },
   },
 
