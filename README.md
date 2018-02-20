@@ -59,4 +59,4 @@ $ npm run dev
 
 These demos were shown at Vue.js Amsterdam 16 Feb 2018
 
-[Slides](slides.com/posva/state-animations)
+[Slides](https://slides.com/posva/state-animations)
