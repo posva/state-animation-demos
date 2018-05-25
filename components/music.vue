@@ -4,7 +4,6 @@
       mode="out-in"
       enter-active-class="animated rotateInDownRight"
       leave-active-class="animated hinge"
-      @after-enter="play"
     >
       <div v-if="progress <= 1" key="loading">
         Loading ({{ (progress * 100).toFixed(0)}}%)
@@ -87,7 +86,7 @@ export default {
     return {
       mode: 'normal',
       rate: 1,
-      playing: true,
+      playing: false,
 
       // motion
       spring: {
