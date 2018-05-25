@@ -47,6 +47,7 @@
       <label>
         <input type="checkbox" v-model="smooth"/> Smooth
       </label>
+      <br>
 
       <button @click="addCube">Add Cube</button>
       <button @click="cubes.shift()">Remove Cube</button>
@@ -166,6 +167,8 @@ export default {
 <style scoped>
 .container {
   display: flex;
+  padding: 0;
+  width: 100%;
   justify-content: center;
   align-items: center;
   text-align: center;

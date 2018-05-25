@@ -75,7 +75,7 @@ export default {
   text-align: center;
   max-width: 400px;
   margin: 30px auto;
-  display: table;
+  display: inline-block;
 }
 
 select {
@@ -83,7 +83,6 @@ select {
 }
 
 svg {
-  width: 400px;
   & text {
     font-size: 0.75rem;
     fill: var(--color-smoke);
