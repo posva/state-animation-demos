@@ -25,6 +25,9 @@
       <li>
         <nuxt-link class="link" to="/music">Music</nuxt-link>
       </li>
+      <li>
+        <nuxt-link class="link" to="/three">3D</nuxt-link>
+      </li>
     </ul>
   </section>
 </template>
