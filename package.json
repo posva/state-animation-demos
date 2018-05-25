@@ -21,6 +21,8 @@
     "modern-normalize": "^0.3.0",
     "nuxt": "^1.0.0",
     "p5": "^0.6.0",
+    "randomcolor": "^0.5.3",
+    "three": "^0.92.0",
     "vue-global-events": "^1.0.2",
     "vue-motion": "^0.2.2",
     "vue-tweezing": "^0.1.2"
