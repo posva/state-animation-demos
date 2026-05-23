@@ -158,6 +158,7 @@ button {
 
   cursor: pointer;
   user-select: none;
+  touch-action: manipulation;
   text-align: center;
   white-space: nowrap;
   text-decoration: none !important;

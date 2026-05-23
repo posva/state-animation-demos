@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import {
-  AmbientLight,
-  BasicShadowMap,
+  ACESFilmicToneMapping,
   BoxGeometry,
   Clock,
   Color,
+  DirectionalLight,
+  HemisphereLight,
   Mesh,
-  MeshPhongMaterial,
+  MeshStandardMaterial,
+  PCFSoftShadowMap,
   PerspectiveCamera,
   RepeatWrapping,
   Scene,
   SpotLight,
+  SRGBColorSpace,
   TextureLoader,
   WebGLRenderer,
 } from 'three'
@@ -56,7 +59,8 @@ function makeGround() {
   texture.wrapS = RepeatWrapping
   texture.wrapT = RepeatWrapping
   texture.repeat.set(6, 6)
-  const material = new MeshPhongMaterial({ map: texture, shininess: 150 })
+  texture.colorSpace = SRGBColorSpace
+  const material = new MeshStandardMaterial({ map: texture, roughness: 0.9, metalness: 0 })
   const mesh = new Mesh(geometry, material)
   mesh.scale.multiplyScalar(3)
   mesh.receiveShadow = true
@@ -65,7 +69,11 @@ function makeGround() {
 
 function makeCube(color: Color) {
   const geometry = new BoxGeometry(1, 1, 1)
-  const material = new MeshPhongMaterial({ color, shininess: 150, specular: 0x222222 })
+  const material = new MeshStandardMaterial({
+    color,
+    roughness: 0.35,
+    metalness: 0.1,
+  })
   const mesh = new Mesh(geometry, material)
   mesh.castShadow = true
   mesh.receiveShadow = true
@@ -167,30 +175,39 @@ function animate() {
 onMounted(() => {
   renderer = new WebGLRenderer({ antialias: true })
   renderer.shadowMap.enabled = true
-  renderer.shadowMap.type = BasicShadowMap
+  renderer.shadowMap.type = PCFSoftShadowMap
+  renderer.toneMapping = ACESFilmicToneMapping
+  renderer.toneMappingExposure = 1.1
+  renderer.outputColorSpace = SRGBColorSpace
+  renderer.setPixelRatio(typeof window !== 'undefined' ? window.devicePixelRatio : 1)
   renderer.setSize(width.value, height.value)
 
   scene = new Scene()
-  scene.background = new Color(0x111111)
+  scene.background = new Color(0x1a1a22)
 
   camera = new PerspectiveCamera(75, width.value / height.value, 0.1, 1000)
   camera.position.set(cameraCurrent.x, cameraCurrent.y, cameraCurrent.z)
   camera.lookAt(scene.position)
 
-  scene.add(new AmbientLight('#eee'))
+  scene.add(new HemisphereLight(0xbfd4ff, 0x352b1f, 0.6))
 
-  for (const [x, y, z] of [[-10, 15, -5], [7, 5, 5]] as const) {
-    const spot = new SpotLight(0x404040)
-    spot.angle = Math.PI / 5
-    spot.penumbra = 0.3
-    spot.position.set(x, y, z)
-    spot.castShadow = true
-    spot.shadow.camera.near = 8
-    spot.shadow.camera.far = 30
-    spot.shadow.mapSize.width = 1024
-    spot.shadow.mapSize.height = 1024
-    scene.add(spot)
-  }
+  const key = new DirectionalLight(0xfff1d6, 2.2)
+  key.position.set(-8, 14, 6)
+  key.castShadow = true
+  key.shadow.mapSize.set(2048, 2048)
+  key.shadow.camera.near = 1
+  key.shadow.camera.far = 40
+  key.shadow.camera.left = -15
+  key.shadow.camera.right = 15
+  key.shadow.camera.top = 15
+  key.shadow.camera.bottom = -15
+  key.shadow.bias = -0.0005
+  key.shadow.radius = 4
+  scene.add(key)
+
+  const fill = new SpotLight(0x88aaff, 80, 40, Math.PI / 4, 0.6, 1.5)
+  fill.position.set(8, 6, -4)
+  scene.add(fill)
 
   scene.add(makeGround())
 

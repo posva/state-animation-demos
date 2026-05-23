@@ -1,11 +1,37 @@
 <script setup lang="ts">
-import { computed, onUnmounted, reactive, ref, watch } from 'vue'
+import { computed, onUnmounted, reactive, ref, shallowRef, watch } from 'vue'
 import { Howl } from 'howler'
 import { Easing } from '@tweenjs/tween.js'
 import Motion from './Motion.vue'
 import Tweezing from './Tweezing.vue'
 
 type Mode = 'normal' | 'motion' | 'tween.js'
+
+interface Track {
+  label: string
+  src: string
+  format?: string[]
+  // seek position (seconds) the Fun button jumps to; defaults to 0
+  funSeek?: number
+  // true => owned blob URL, revoke on replace
+  isBlob?: boolean
+}
+
+const builtInTracks: Track[] = [
+  { label: '🎺 Meatball Parade (instrumental)', src: '/meatball-parade.mp3', funSeek: 51 },
+  { label: '🎤 Rewob — Adaptation (acapella)', src: '/rewob-adaptation-acapella.mp3' },
+  { label: '🎹 Beethoven — Für Elise', src: '/fur-elise.ogg', format: ['ogg'] },
+  { label: '🎻 Bach — Brandenburg No. 1, Allegro', src: '/bach-brandenburg-1-allegro.ogg', format: ['ogg'] },
+  { label: '⛪ Pachelbel — Magnificat Fugue (organ)', src: '/pachelbel-magnificat-fugue.ogg', format: ['ogg'] },
+  { label: '🔔 Tibetan singing bowl', src: '/tibetan-singing-bowl.ogg', format: ['ogg'] },
+  { label: '🎛 Yamaha CS1X synth tone', src: '/yamaha-synth.ogg', format: ['ogg'] },
+  { label: '🪈 Didgeridoo drone', src: '/didgeridoo.ogg', format: ['ogg'] },
+  { label: '⛈ Thunder', src: '/thunder.ogg', format: ['ogg'] },
+  { label: '❤️ Heartbeat', src: '/heartbeat.ogg', format: ['ogg'] },
+]
+
+const tracks = shallowRef<Track[]>([...builtInTracks])
+const currentTrack = shallowRef<Track>(builtInTracks[0]!)
 
 const mode = ref<Mode>('normal')
 const rate = ref(1)
@@ -20,7 +46,7 @@ const easings = Object.entries(Easing).map(([name, group]) => ({
   value: group as Record<'In' | 'Out' | 'InOut', (k: number) => number>,
 }))
 
-const equationType = ref<any>(Easing.Linear)
+const equationType = shallowRef<any>(Easing.Linear)
 const easingType = ref<'In' | 'Out' | 'InOut'>('In')
 
 const easing = computed(() => {
@@ -28,37 +54,70 @@ const easing = computed(() => {
   return group[easingType.value] ?? group.None ?? group
 })
 
-const song = new Howl({
-  src: ['/meatball-parade.mp3'],
-  loop: true,
-  volume: 0.1,
-  onload: () => (loaded.value = true),
-  onloaderror: (_id, err) => (loadError.value = String(err)),
+const song = shallowRef<Howl>(makeSong(currentTrack.value))
+
+function makeSong(track: Track) {
+  return new Howl({
+    src: [track.src],
+    format: track.format,
+    loop: true,
+    volume: 0.1,
+    rate: rate.value,
+    onload: () => (loaded.value = true),
+    onloaderror: (_id, err) => (loadError.value = String(err)),
+  })
+}
+
+watch(currentTrack, (next, prev) => {
+  loaded.value = false
+  loadError.value = null
+  playing.value = false
+  song.value.stop()
+  song.value.unload()
+  if (prev?.isBlob) URL.revokeObjectURL(prev.src)
+  song.value = makeSong(next)
 })
+
+function onFilePicked(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  const url = URL.createObjectURL(file)
+  const ext = file.name.split('.').pop()?.toLowerCase()
+  const track: Track = {
+    label: `📁 ${file.name}`,
+    src: url,
+    format: ext ? [ext] : undefined,
+    isBlob: true,
+  }
+  tracks.value = [...tracks.value, track]
+  currentTrack.value = track
+  input.value = ''
+}
 
 function setRate(r: number) {
   const clamped = Math.max(0.01, Math.min(4, r))
-  song.rate(clamped)
+  song.value.rate(clamped)
   return clamped
 }
 
 function play() {
-  song.play()
+  song.value.play()
   playing.value = true
 }
 
 function pause() {
-  song.pause()
+  song.value.pause()
   playing.value = false
 }
 
 function toggleVolume() {
-  const current = song.volume()
-  song.fade(current, current < 1 ? 1 : 0.1, 300)
+  const current = song.value.volume()
+  song.value.fade(current, current < 1 ? 1 : 0.1, 300)
 }
 
 async function fun() {
-  song.seek(51)
+  song.value.seek(currentTrack.value.funSeek ?? 0)
   mode.value = 'normal'
   rate.value = 1.05
   await Promise.resolve()
@@ -74,13 +133,26 @@ watch(rate, r => {
 })
 
 onUnmounted(() => {
-  song.stop()
-  song.unload()
+  song.value.stop()
+  song.value.unload()
+  for (const t of tracks.value) if (t.isBlob) URL.revokeObjectURL(t.src)
 })
 </script>
 
 <template>
   <div class="music-container">
+    <div class="track-picker">
+      <label class="text">
+        Track
+        <select v-model="currentTrack">
+          <option v-for="t in tracks" :key="t.src" :value="t">{{ t.label }}</option>
+        </select>
+      </label>
+      <label class="audio-btn file-btn">
+        📂 Load file
+        <input type="file" accept="audio/*" @change="onFilePicked" />
+      </label>
+    </div>
     <Transition
       mode="out-in"
       enter-active-class="animated rotateInDownRight"
@@ -170,5 +242,27 @@ input[type='range'] {
 .music-container {
   min-width: 270px;
   min-height: 20px;
+}
+
+.track-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.track-picker select {
+  max-width: 18rem;
+}
+
+.file-btn {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.file-btn input[type='file'] {
+  display: none;
 }
 </style>
